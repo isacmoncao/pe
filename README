@@ -1,0 +1,24 @@
+pe - português estruturado
+==========================
+pe is a structured portuguese compiler implementation.
+
+
+Build
+-----
+Make sure you have make installed then run:
+
+    make
+
+If you want debug symbols run:
+    
+    make debug
+
+
+Installation
+------------
+<DO LATER>
+
+License
+-------
+This project is licensed under the 3-Clause BSD license.
+See LICENSE file for copyright and license details.
