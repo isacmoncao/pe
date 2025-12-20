@@ -35,3 +35,21 @@ static void lexer_skip_whitespace(lexer *lex) {
     lexer_advance(lex);
   }
 }
+
+static token lexer_read_identifier(lexer *lex) {
+  token tkn;
+  tkn.type = TOKEN_IDENTIFIER;
+  tkn.line = lex->line;
+  tkn.col = lex->col;
+  
+  int i = 0;
+  while (isalnum((unsigned char)lexer_peek(lex)) || lexer_peek(lex) == '_') {
+    if (i < 99)
+      tkn.lexeme[i++] = lexer_advance(lex);
+    else
+     lexer_advance(lex);
+  }
+  
+  tkn.lexeme[i] = '\0';
+  return tkn;
+}
