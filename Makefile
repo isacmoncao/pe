@@ -7,7 +7,7 @@
 CC = gcc
 TARGET = pe # The program name
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -O2
-SRCS = src/main.c
+SRCS = src/main.c src/lexer.c
 OBJS = ${SRCS:.c=.o}
 BUILD_DIR = build
 
