@@ -1,6 +1,5 @@
 /*
  * Copyright (c) 2025 José Isac Araujo Monção
- * All rights reserved.
  *
  * See LICENSE file for copyright and license details.
  */
