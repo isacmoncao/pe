@@ -4,6 +4,7 @@
  *
  * See LICENSE file for copyright and license details.
  */
+#include <ctype.h>
 #include "../include/lexer.h"
 
 void lexer_init(lexer *lex, const char *source) {
@@ -27,4 +28,10 @@ static char lexer_advance(lexer *lex) {
 // Look the current char
 static char lexer_peek(lexer *lex) {
   return lex->source[lex->pos];
+}
+
+static void lexer_skip_whitespace(lexer *lex) {
+  while (isspace((unsigned char)lexer_peek(lex))) {
+    lexer_advance(lex);
+  }
 }
