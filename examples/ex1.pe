@@ -1,0 +1,12 @@
+ALGORITMO ex1;
+VARIAVEIS
+  a, b, c, d, soma: inteiro;
+INICIO
+  leia(a, b, c, d);
+  soma <- a + b + c + d;
+  se (soma > 5) entao
+    escreva("Soma maior do que 5");
+  senao
+    escreva("Soma menor do que 5");
+  fimse;
+FIM.
