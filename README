@@ -13,6 +13,10 @@ If you want debug symbols run:
     
     make debug
 
+Run example code:
+    
+    make run
+
 
 Installation
 ------------
