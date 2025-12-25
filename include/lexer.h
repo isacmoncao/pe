@@ -47,16 +47,16 @@ typedef enum {
   TOKEN_NOT,
   TOKEN_READ,
   TOKEN_WRITE,
-  TOKEN_ALGNAME,
   TOKEN_IDENTIFIER,
+  TOKEN_NUMBER,
   TOKEN_LPAREN,
   TOKEN_RPAREN,
+  TOKEN_DOT,
   TOKEN_COMMA,
   TOKEN_COLON,
   TOKEN_SEMICOLON,
   TOKEN_QUOTE,
   TOKEN_DBQUOTES,
-  TOKEN_COMMENT,
   TOKEN_ERROR
 } token_t;
 
@@ -76,6 +76,6 @@ typedef struct {
 
 void lexer_init(lexer *lex, const char *source);
 token lexer_next_token(lexer *lex);
-void token_print(const token *tkn);
+void token_print(const token tkn);
 
 #endif
