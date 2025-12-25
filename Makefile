@@ -6,7 +6,7 @@
 CC = gcc
 TARGET = pe # The program name
 CFLAGS = -std=c99 -Wall -Wextra -pedantic -O2
-SRCS = src/main.c src/lexer.c
+SRCS = src/main.c src/lexer.c src/util.c
 OBJS = ${SRCS:.c=.o}
 BUILD_DIR = build
 
@@ -22,8 +22,8 @@ ${BUILD_DIR}/${TARGET}: ${OBJS}
 	${CC} ${OBJS} -o $@
 
 run: all
-	@echo "Running ${TARGET} with example/ex1.pe"
-	@./${BUILD_DIR}/${TARGET} example/ex1.pe 
+	@echo "Running ${TARGET} with examples/ex1.pe"
+	@./${BUILD_DIR}/${TARGET} examples/ex1.pe 
 
 clean:
 	rm -rf ${OBJS} ${BUILD_DIR}
