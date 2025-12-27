@@ -55,11 +55,42 @@ static token lexer_read_number(lexer *lex) {
   return tkn;
 }
 
+static token lexer_read_string(lexer *lex) {
+  token tkn;
+  tkn.type = TOKEN_STRING;
+  tkn.line = lex->line;
+  tkn.col = lex->col;
+  
+  // Consume opening string
+  lexer_advance(lex);
+
+  int i = 0;
+  char c;
+  while ((c = lexer_peek(lex)) != '"' && c != '\0') {
+    if (i < 99)
+      tkn.lexeme[i++] = lexer_advance(lex);
+    else
+      lexer_advance(lex);
+  }
+
+  if (c == '\0') {
+    tkn.type = TOKEN_ERROR;
+    strcpy(tkn.lexeme, "Unterminated string");
+    return tkn;
+  } 
+
+  // Consume close string
+  lexer_advance(lex);
+  tkn.lexeme[i] = '\0';
+  return tkn;
+}
+
 static token_t check_keyword(const char* lexeme) {
   if (strcmp(lexeme, "ALGORITMO") == 0) return TOKEN_ALGORITHM;
   if (strcmp(lexeme, "VARIAVEIS") == 0) return TOKEN_VARIABLES;
   if (strcmp(lexeme, "INICIO") == 0) return TOKEN_BEGIN;
   if (strcmp(lexeme, "se") == 0) return TOKEN_IF;
+  if (strcmp(lexeme, "entao") == 0) return TOKEN_THEN;
   if (strcmp(lexeme, "senao") == 0) return TOKEN_ELSE;
   if (strcmp(lexeme, "fimse") == 0) return TOKEN_ENDIF;
   if (strcmp(lexeme, "faca") == 0) return TOKEN_DO;
@@ -127,6 +158,9 @@ token lexer_next_token(lexer *lex) {
 
   if (isalpha(current) || current == '_')
     return lexer_read_identifier(lex);
+
+  if (current == '"')
+    return lexer_read_string(lex);
 
   token tkn;
   tkn.line = lex->line;
@@ -225,16 +259,6 @@ token lexer_next_token(lexer *lex) {
       strcpy(tkn.lexeme, ";");
       lexer_advance(lex);
       break;
-    case '\'':
-      tkn.type = TOKEN_QUOTE;
-      strcpy(tkn.lexeme, "'");
-      lexer_advance(lex);
-      break;
-    case '\"':
-      tkn.type = TOKEN_DBQUOTES;
-      strcpy(tkn.lexeme, "\"");
-      lexer_advance(lex);
-      break;
     default:
       tkn.type = TOKEN_ERROR;
       tkn.lexeme[0] = lexer_advance(lex);
@@ -288,14 +312,13 @@ void token_print(const token tkn) {
     "TOKEN_WRITE",
     "TOKEN_IDENTIFIER",
     "TOKEN_NUMBER",
+    "TOKEN_STRING",
     "TOKEN_LPAREN",
     "TOKEN_RPAREN",
     "TOKEN_DOT",
     "TOKEN_COMMA",
     "TOKEN_COLON",
     "TOKEN_SEMICOLON",
-    "TOKEN_QUOTE",
-    "TOKEN_DBQUOTES",
     "TOKEN_ERROR"
   };
   printf("Token[%s] = '%s' at (%d:%d)\n", type_names[tkn.type], tkn.lexeme, tkn.line, tkn.col);
