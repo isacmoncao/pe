@@ -85,6 +85,53 @@ static token lexer_read_string(lexer *lex) {
   return tkn;
 }
 
+static token lexer_read_char(lexer *lex) {
+  token tkn;
+  tkn.type = TOKEN_CHAR;
+  tkn.line = lex->line;
+  tkn.col = lex->col;
+
+  lexer_advance(lex);
+
+  int i = 0;
+  char c = lexer_peek(lex);
+  if (c == '\0') {
+    tkn.type = TOKEN_ERROR;
+    strcpy(tkn.lexeme, "Unterminated char");
+    return tkn;
+  }
+
+  // Handle escape sequences
+  if (c == '\\') {
+    if (i < 2)
+      tkn.lexeme[i++] = lexer_advance(lex);
+
+    char next = lexer_peek(lex);
+
+    if (next != '\0' && i < 2)
+      tkn.lexeme[i++] = lexer_advance(lex);
+
+  } else {
+    if (i < 2)
+      tkn.lexeme[i++] = lexer_advance(lex);
+  }
+
+  c = lexer_peek(lex);
+  if (c != '\'') {
+    tkn.type = TOKEN_ERROR;
+    strcpy(tkn.lexeme, "Char too long or missing closing quote");
+    return tkn;
+  }
+
+  lexer_advance(lex);
+  tkn.lexeme[i] = '\0';
+  if (i > 2) {
+    tkn.type = TOKEN_ERROR;
+    strcpy(tkn.lexeme, "Invalid char literal");
+  }
+  return tkn;
+}
+
 static token_t check_keyword(const char* lexeme) {
   if (strcmp(lexeme, "ALGORITMO") == 0) return TOKEN_ALGORITHM;
   if (strcmp(lexeme, "VARIAVEIS") == 0) return TOKEN_VARIABLES;
@@ -161,6 +208,9 @@ token lexer_next_token(lexer *lex) {
 
   if (current == '"')
     return lexer_read_string(lex);
+
+  if (current == '\'')
+    return lexer_read_char(lex);
 
   token tkn;
   tkn.line = lex->line;
@@ -313,6 +363,7 @@ void token_print(const token tkn) {
     "TOKEN_IDENTIFIER",
     "TOKEN_NUMBER",
     "TOKEN_STRING",
+    "TOKEN_CHAR",
     "TOKEN_LPAREN",
     "TOKEN_RPAREN",
     "TOKEN_DOT",
